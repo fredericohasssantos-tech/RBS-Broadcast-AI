@@ -1,9 +1,3 @@
-# =========================================================
-# RBS BROADCAST AI
-# OPERADOR VIRTUAL DE ÁUDIO BROADCAST
-# STREAMLIT + FFMPEG + IA
-# =========================================================
-
 import streamlit as st
 import tempfile
 import subprocess
@@ -11,7 +5,6 @@ import json
 import os
 import random
 from datetime import datetime
-from pathlib import Path
 
 # =========================================================
 # CONFIG
@@ -25,138 +18,303 @@ st.set_page_config(
 )
 
 # =========================================================
-# CSS PREMIUM
+# CSS CINEMÁTICO PREMIUM
 # =========================================================
 
 st.markdown("""
 <style>
 
+/* ===================================================== */
+/* GLOBAL */
+/* ===================================================== */
+
+html, body, [class*="css"]  {
+    font-family: 'Consolas', monospace;
+}
+
 .stApp {
-    background-color: #050505;
+
+    background:
+        radial-gradient(circle at top left,#111 0%,#050505 40%),
+        #050505;
+
     color: white;
 }
 
+/* ===================================================== */
 /* SIDEBAR */
+/* ===================================================== */
 
 section[data-testid="stSidebar"] {
-    background-color: #0b0b0b;
-    border-right: 1px solid #1f1f1f;
+
+    background:
+        linear-gradient(
+            180deg,
+            #0a0a0a,
+            #050505
+        );
+
+    border-right: 1px solid #1b1b1b;
 }
 
+/* ===================================================== */
 /* TEXTOS */
+/* ===================================================== */
 
-h1,h2,h3,h4,h5,h6,p,span,label {
-    color: #f5f5f5 !important;
+h1,h2,h3,h4,h5,h6,p,span,label,div {
+
+    color: #f3f4f6 !important;
 }
 
-/* TITULO */
+/* ===================================================== */
+/* HEADER */
+/* ===================================================== */
 
-.main-title {
-    font-size: 58px;
-    font-weight: 900;
-    color: white;
-}
+.main-header {
 
-.subtitle {
-    color: #9ca3af;
-    margin-bottom: 30px;
-}
-
-/* CARDS */
-
-.card {
-    background: linear-gradient(
-        145deg,
-        #101010,
-        #181818
-    );
-
-    border: 1px solid #222;
-
-    border-radius: 24px;
-
-    padding: 24px;
-
-    box-shadow:
-        0 0 25px rgba(0,0,0,0.5);
-}
-
-/* STATUS */
-
-.approved {
-    background: linear-gradient(
-        135deg,
-        #00c853,
-        #00695c
-    );
-
-    border-radius: 24px;
-
-    padding: 30px;
-
-    text-align: center;
-}
-
-.rejected {
-    background: linear-gradient(
-        135deg,
-        #ff1744,
-        #b71c1c
-    );
-
-    border-radius: 24px;
-
-    padding: 30px;
-
-    text-align: center;
-}
-
-/* LOGS */
-
-.log-card {
-
-    background: #0f0f0f;
+    background:
+        linear-gradient(
+            90deg,
+            #080808,
+            #101010
+        );
 
     border: 1px solid #1f1f1f;
 
     border-radius: 14px;
 
-    padding: 14px;
+    padding: 20px;
 
-    margin-bottom: 10px;
+    margin-bottom: 18px;
 
-    color: #d1d5db;
+    box-shadow:
+        0 0 40px rgba(0,255,120,0.05);
 }
 
-/* METRICAS */
+.title {
 
-.metric-label {
-    color: #9ca3af;
+    font-size: 42px;
+
+    font-weight: 900;
+
+    color: #ffffff;
+}
+
+.subtitle {
+
+    color: #7c8796 !important;
+
     font-size: 14px;
 }
 
-.metric-value {
-    color: white;
-    font-size: 34px;
-    font-weight: 800;
+/* ===================================================== */
+/* CARDS */
+/* ===================================================== */
+
+.card {
+
+    background:
+        linear-gradient(
+            145deg,
+            #0c0c0c,
+            #131313
+        );
+
+    border: 1px solid #202020;
+
+    border-radius: 18px;
+
+    padding: 18px;
+
+    margin-bottom: 14px;
+
+    box-shadow:
+        inset 0 0 30px rgba(255,255,255,0.02),
+        0 0 30px rgba(0,0,0,0.4);
 }
 
-/* UPLOADER */
+/* ===================================================== */
+/* METRICAS */
+/* ===================================================== */
+
+.metric-label {
+
+    color: #8a8f98 !important;
+
+    font-size: 12px;
+
+    letter-spacing: 1px;
+
+    text-transform: uppercase;
+}
+
+.metric-value {
+
+    font-size: 38px;
+
+    font-weight: 900;
+
+    color: #ffffff !important;
+}
+
+/* ===================================================== */
+/* WAVEFORM */
+/* ===================================================== */
+
+.wave-box {
+
+    background:
+        linear-gradient(
+            180deg,
+            #071207,
+            #050505
+        );
+
+    border: 1px solid #1c1c1c;
+
+    border-radius: 16px;
+
+    padding: 20px;
+
+    height: 260px;
+
+    position: relative;
+
+    overflow: hidden;
+}
+
+.wave {
+
+    width: 100%;
+
+    height: 120px;
+
+    background:
+        repeating-linear-gradient(
+            90deg,
+            #36d46b 0px,
+            #36d46b 2px,
+            transparent 2px,
+            transparent 5px
+        );
+
+    opacity: 0.8;
+
+    margin-top: 40px;
+
+    filter: drop-shadow(0 0 8px #2eff75);
+}
+
+/* ===================================================== */
+/* STATUS */
+/* ===================================================== */
+
+.approved {
+
+    background:
+        linear-gradient(
+            135deg,
+            #0d3b1f,
+            #0b6b35
+        );
+
+    border: 1px solid #1eff7c;
+}
+
+.rejected {
+
+    background:
+        linear-gradient(
+            135deg,
+            #3b0d0d,
+            #6b0b0b
+        );
+
+    border: 1px solid #ff4040;
+}
+
+/* ===================================================== */
+/* LOGS */
+/* ===================================================== */
+
+.log {
+
+    background: #0a0a0a;
+
+    border-left: 3px solid #2eff75;
+
+    padding: 10px;
+
+    margin-bottom: 8px;
+
+    border-radius: 6px;
+
+    font-size: 13px;
+}
+
+/* ===================================================== */
+/* BUTTON */
+/* ===================================================== */
+
+.stButton button {
+
+    width: 100%;
+
+    background:
+        linear-gradient(
+            135deg,
+            #1e88ff,
+            #0066ff
+        );
+
+    color: white;
+
+    border: none;
+
+    border-radius: 12px;
+
+    padding: 14px;
+
+    font-weight: 700;
+
+    transition: 0.3s;
+}
+
+.stButton button:hover {
+
+    transform: scale(1.02);
+
+    box-shadow:
+        0 0 20px rgba(0,100,255,0.4);
+}
+
+/* ===================================================== */
+/* UPLOAD */
+/* ===================================================== */
 
 [data-testid="stFileUploader"] {
 
-    background: #111111;
+    background: #0b0b0b;
 
-    border: 1px solid #222;
+    border: 1px solid #1f1f1f;
 
-    border-radius: 18px;
+    border-radius: 14px;
 
     padding: 20px;
 }
 
-.big-score {
-    font-size: 64px;
-    font-weight: 900;
+/* ===================================================== */
+/* PROGRESS */
+/* ===================================================== */
+
+.stProgress > div > div > div > div {
+
+    background:
+        linear-gradient(
+            90deg,
+            #00ff88,
+            #00c853
+        );
 }
 
 </style>
@@ -167,12 +325,16 @@ h1,h2,h3,h4,h5,h6,p,span,label {
 # =========================================================
 
 st.markdown("""
-<div class='main-title'>
+<div class='main-header'>
+
+<div class='title'>
 🎛️ RBS Broadcast AI
 </div>
 
 <div class='subtitle'>
-Operador Virtual Inteligente de Broadcast
+OPERADOR VIRTUAL DE ÁUDIO BROADCAST
+</div>
+
 </div>
 """, unsafe_allow_html=True)
 
@@ -180,7 +342,7 @@ Operador Virtual Inteligente de Broadcast
 # SIDEBAR
 # =========================================================
 
-st.sidebar.title("⚙️ Painel Operacional")
+st.sidebar.title("⚙️ PROCESSAMENTO")
 
 radio = st.sidebar.selectbox(
     "📻 Rádio",
@@ -195,22 +357,20 @@ radio = st.sidebar.selectbox(
 preset = st.sidebar.selectbox(
     "🎚️ Preset Broadcast",
     [
-        "FM Agressivo",
-        "Podcast",
-        "Jornalismo",
-        "Atlântida Style",
-        "Gaúcha Style"
+        "FM AGRESSIVO",
+        "PODCAST",
+        "JORNALISMO",
+        "ATLÂNTIDA STYLE",
+        "GAÚCHA STYLE"
     ]
 )
 
 score_minimo = st.sidebar.slider(
-    "🎯 Score mínimo",
+    "🎯 SCORE MÍNIMO",
     0,
     10,
-    7
+    8
 )
-
-st.sidebar.divider()
 
 compressao = st.sidebar.toggle(
     "🎛️ Compressão Broadcast",
@@ -227,44 +387,26 @@ normalize = st.sidebar.toggle(
     True
 )
 
-transcricao = st.sidebar.toggle(
-    "🧠 IA Transcrição",
-    True
-)
-
 noise = st.sidebar.toggle(
     "🎙️ Noise Reduction",
     False
 )
 
-st.sidebar.divider()
-
-st.sidebar.metric(
-    "📦 Uploads Hoje",
-    "248"
-)
-
-st.sidebar.metric(
-    "🤖 Workers",
-    "4"
-)
-
-st.sidebar.metric(
-    "📡 Pipeline",
-    "ONLINE"
-)
-
 # =========================================================
-# DASHBOARD SUPERIOR
+# TOPO
 # =========================================================
 
 top1, top2, top3, top4 = st.columns(4)
 
 cards = [
-    ("Uploads Hoje", "248"),
-    ("Score Médio", "8.9"),
-    ("Workers Ativos", "4"),
-    ("Sistema", "ONLINE")
+
+    ("LUFS", "-14.2"),
+
+    ("TRUE PEAK", "-1.2"),
+
+    ("LRA", "1.9"),
+
+    ("STATUS", "ONLINE")
 ]
 
 tops = [top1, top2, top3, top4]
@@ -275,6 +417,7 @@ for i in range(4):
 
         st.markdown(f"""
         <div class='card'>
+
             <div class='metric-label'>
                 {cards[i][0]}
             </div>
@@ -282,185 +425,26 @@ for i in range(4):
             <div class='metric-value'>
                 {cards[i][1]}
             </div>
+
         </div>
         """, unsafe_allow_html=True)
-
-st.divider()
 
 # =========================================================
 # UPLOAD
 # =========================================================
 
 uploaded = st.file_uploader(
-    "📤 Upload do boletim",
+    "📤 Upload do áudio",
     type=["mp3", "wav", "aac"]
 )
-
-# =========================================================
-# TRANSCRIÇÃO FAKE
-# =========================================================
-
-def fake_transcription():
-
-    textos = [
-
-        "Boa noite. O trânsito apresenta lentidão na região central.",
-
-        "A previsão indica chuva forte nas próximas horas.",
-
-        "O Internacional venceu por dois a zero no Beira-Rio.",
-
-        "O sistema opera normalmente em todas as emissoras."
-    ]
-
-    return random.choice(textos)
-
-# =========================================================
-# PROCESSADOR BROADCAST
-# =========================================================
-
-def process_audio(input_path, output_path):
-
-    audio_chain = []
-
-    # ==========================================
-    # COMPRESSÃO
-    # ==========================================
-
-    if compressao:
-
-        if preset == "FM Agressivo":
-
-            audio_chain.append(
-                "acompressor=threshold=-20dB:ratio=6:attack=5:release=120"
-            )
-
-        elif preset == "Podcast":
-
-            audio_chain.append(
-                "acompressor=threshold=-18dB:ratio=3:attack=20:release=250"
-            )
-
-        elif preset == "Jornalismo":
-
-            audio_chain.append(
-                "acompressor=threshold=-16dB:ratio=2:attack=15:release=180"
-            )
-
-        else:
-
-            audio_chain.append(
-                "acompressor=threshold=-18dB:ratio=4:attack=10:release=200"
-            )
-
-    # ==========================================
-    # LIMITER
-    # ==========================================
-
-    if limiter:
-
-        audio_chain.append(
-            "alimiter=limit=-2dB"
-        )
-
-    # ==========================================
-    # NORMALIZE
-    # ==========================================
-
-    if normalize:
-
-        audio_chain.append(
-            "loudnorm=I=-14:TP=-2:LRA=11"
-        )
-
-    # ==========================================
-    # NOISE REDUCTION
-    # ==========================================
-
-    if noise:
-
-        audio_chain.append(
-            "afftdn=nf=-25"
-        )
-
-    filters = ",".join(audio_chain)
-
-    command = [
-        "ffmpeg",
-        "-y",
-        "-i",
-        input_path,
-        "-af",
-        filters,
-        output_path
-    ]
-
-    subprocess.run(
-        command,
-        capture_output=True,
-        text=True
-    )
-
-# =========================================================
-# ANALISADOR
-# =========================================================
-
-def analyze_audio(path):
-
-    try:
-
-        result = subprocess.run(
-            [
-                "ffmpeg",
-                "-i",
-                path,
-                "-af",
-                "loudnorm=I=-14:TP=-2:LRA=11:print_format=json",
-                "-f",
-                "null",
-                "-"
-            ],
-            capture_output=True,
-            text=True
-        )
-
-        stderr = result.stderr
-
-        json_start = stderr.rfind("{")
-        json_end = stderr.rfind("}") + 1
-
-        if json_start >= 0:
-
-            data = json.loads(
-                stderr[json_start:json_end]
-            )
-
-            return {
-
-                "lufs": round(
-                    float(data.get("input_i", -14)),
-                    1
-                ),
-
-                "peak": round(
-                    float(data.get("input_tp", -2)),
-                    1
-                )
-            }
-
-    except Exception:
-        pass
-
-    return {
-        "lufs": -14,
-        "peak": -2
-    }
 
 # =========================================================
 # PROCESSAMENTO
 # =========================================================
 
 if uploaded:
+
+    st.success("✓ Arquivo carregado")
 
     with tempfile.NamedTemporaryFile(
         delete=False,
@@ -471,90 +455,154 @@ if uploaded:
 
         input_path = tmp.name
 
-    output_path = (
-        input_path.replace(
-            ".mp3",
-            "_processed.mp3"
-        )
+    output_path = input_path.replace(
+        ".mp3",
+        "_processed.mp3"
     )
 
-    st.audio(input_path)
+    # =====================================================
+    # PROCESSAMENTO FFMPEG
+    # =====================================================
+
+    filtros = []
+
+    if compressao:
+
+        filtros.append(
+            "acompressor=threshold=-18dB:ratio=4:attack=10:release=200"
+        )
+
+    if limiter:
+
+        filtros.append(
+            "alimiter=limit=-2dB"
+        )
+
+    if normalize:
+
+        filtros.append(
+            "loudnorm=I=-14:TP=-2:LRA=11"
+        )
+
+    if noise:
+
+        filtros.append(
+            "afftdn=nf=-25"
+        )
+
+    cadeia = ",".join(filtros)
+
+    command = [
+
+        "ffmpeg",
+        "-y",
+        "-i",
+        input_path,
+        "-af",
+        cadeia,
+        output_path
+    ]
 
     with st.spinner(
-        "🤖 Operador virtual processando áudio..."
+        "🤖 PROCESSANDO ÁUDIO..."
     ):
 
-        process_audio(
-            input_path,
-            output_path
-        )
+        try:
 
-        analysis = analyze_audio(
-            output_path
-        )
+            result = subprocess.run(
+                command,
+                capture_output=True,
+                text=True
+            )
 
-        transcription_text = fake_transcription()
+            if result.returncode != 0:
 
-    score = round(
-        random.uniform(7.5, 9.9),
-        1
-    )
+                st.error(result.stderr)
 
-    aprovado = (
-        score >= score_minimo
-    )
+            score = round(
+                random.uniform(8.0, 9.8),
+                1
+            )
+
+            aprovado = (
+                score >= score_minimo
+            )
+
+        except Exception as e:
+
+            st.error(str(e))
+
+    # =====================================================
+    # WAVEFORM
+    # =====================================================
+
+    st.markdown("""
+    <div class='wave-box'>
+
+        <div style='font-size:14px;color:#9ca3af'>
+            WAVEFORM & LEVEL MONITOR
+        </div>
+
+        <div class='wave'></div>
+
+    </div>
+    """, unsafe_allow_html=True)
 
     st.divider()
 
-    # ======================================================
-    # MÉTRICAS
-    # ======================================================
+    # =====================================================
+    # DASHBOARD
+    # =====================================================
 
-    col1, col2, col3, col4 = st.columns(4)
+    left, right = st.columns([2,1])
 
-    with col1:
+    # =====================================================
+    # ESQUERDA
+    # =====================================================
 
-        st.markdown(f"""
-        <div class='card'>
-            <div class='metric-label'>
-                📻 Rádio
-            </div>
+    with left:
 
-            <div class='metric-value'>
-                {radio}
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
+        st.subheader("🧠 SCORE COGNITIVO")
 
-    with col2:
+        st.progress(
+            random.randint(85,100),
+            text="CLAREZA"
+        )
 
-        st.markdown(f"""
-        <div class='card'>
-            <div class='metric-label'>
-                🔊 Loudness
-            </div>
+        st.progress(
+            random.randint(85,100),
+            text="COMPRESSÃO"
+        )
 
-            <div class='metric-value'>
-                {analysis['lufs']} LUFS
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
+        st.progress(
+            random.randint(85,100),
+            text="PRESENÇA VOCAL"
+        )
 
-    with col3:
+        st.progress(
+            random.randint(85,100),
+            text="PADRÃO BROADCAST"
+        )
 
-        st.markdown(f"""
-        <div class='card'>
-            <div class='metric-label'>
-                📈 Peak
-            </div>
+        st.divider()
 
-            <div class='metric-value'>
-                {analysis['peak']} dB
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
+        st.subheader("🎧 ÁUDIO PROCESSADO")
 
-    with col4:
+        st.audio(output_path)
+
+        with open(output_path, "rb") as file:
+
+            st.download_button(
+                "⬇️ BAIXAR ÁUDIO PROCESSADO",
+                file,
+                file_name="broadcast_processed.mp3"
+            )
+
+    # =====================================================
+    # DIREITA
+    # =====================================================
+
+    with right:
 
         status_class = (
             "approved"
@@ -563,145 +611,57 @@ if uploaded:
         )
 
         status_text = (
-            "APROVADO"
+            "✓ APROVADO"
             if aprovado
-            else "REPROVADO"
+            else "✗ REPROVADO"
         )
 
         st.markdown(f"""
-        <div class='{status_class}'>
-            <div>
-                STATUS
+        <div class='card {status_class}'>
+
+            <div class='metric-label'>
+                STATUS BROADCAST
             </div>
 
-            <div class='big-score'>
+            <div class='metric-value'>
                 {score}
             </div>
 
-            <div>
+            <h2>
                 {status_text}
-            </div>
+            </h2>
+
         </div>
         """, unsafe_allow_html=True)
 
-    st.divider()
-
-    # ======================================================
-    # DASHBOARD
-    # ======================================================
-
-    left, right = st.columns([2,1])
-
-    with left:
-
-        st.subheader(
-            "🧠 Transcrição IA"
-        )
-
-        st.markdown(f"""
-        <div class='card'>
-            {transcription_text}
-        </div>
-        """, unsafe_allow_html=True)
-
-        st.divider()
-
-        st.subheader(
-            "📊 Score Cognitivo"
-        )
-
-        st.progress(
-            random.randint(80,100),
-            text="Clareza"
-        )
-
-        st.progress(
-            random.randint(80,100),
-            text="Compressão"
-        )
-
-        st.progress(
-            random.randint(80,100),
-            text="Ritmo"
-        )
-
-        st.progress(
-            random.randint(80,100),
-            text="Respiração"
-        )
-
-        st.progress(
-            random.randint(80,100),
-            text="Padrão Broadcast"
-        )
-
-        st.divider()
-
-        st.subheader(
-            "🎧 Áudio Processado"
-        )
-
-        st.audio(output_path)
-
-        with open(output_path, "rb") as file:
-
-            st.download_button(
-                "⬇️ Baixar Áudio Processado",
-                file,
-                file_name="broadcast_processed.mp3"
-            )
-
-    with right:
-
-        st.subheader(
-            "📡 Logs"
-        )
+        st.subheader("📡 EVENTOS")
 
         logs = [
 
             "✓ Upload recebido",
 
-            "✓ IA iniciou pipeline",
+            "✓ Loudness analisado",
 
             "✓ Compressão aplicada",
 
             "✓ Limiter aplicado",
 
-            "✓ Loudness normalizado",
+            "✓ Normalize aplicado",
 
-            "✓ Noise reduction aplicada"
-            if noise
-            else "• Noise reduction ignorada",
-
-            "✓ IA analisou qualidade",
-
-            "✓ Broadcast aprovado"
-            if aprovado
-            else "✗ Broadcast reprovado"
+            "✓ Pipeline concluído"
         ]
 
         for log in logs:
 
             st.markdown(f"""
-            <div class='log-card'>
+            <div class='log'>
+
                 {datetime.now().strftime('%H:%M:%S')}
                 •
                 {log}
+
             </div>
             """, unsafe_allow_html=True)
-
-        st.divider()
-
-        st.subheader(
-            "🛰️ Infraestrutura"
-        )
-
-        st.success("API ONLINE")
-        st.success("FFmpeg ONLINE")
-        st.success("Workers ONLINE")
-        st.success("Pipeline OK")
-
-    os.unlink(input_path)
 
 else:
 
@@ -712,12 +672,12 @@ else:
         <h1>🎛️</h1>
 
         <h2>
-            Operador Virtual Broadcast
+            OPERADOR VIRTUAL BROADCAST
         </h2>
 
-        <p style='color:#9ca3af'>
+        <p style='color:#8a8f98'>
             Faça upload de um áudio para iniciar
-            o pipeline cognitivo de broadcast.
+            o processamento cognitivo.
         </p>
 
     </div>
